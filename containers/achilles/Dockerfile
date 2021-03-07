@@ -1,11 +1,11 @@
 # A Docker container to run the OHDSI/Achilles analysis tool
-FROM ubuntu:focal
+FROM ubuntu:20.04
 
 LABEL maintainer="Taha Abdul-Basser <ta2471@cumc.columbia.edu>"
 
 # Install java, R and required packages and clean up.
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y software-properties-common && \
+    apt-get install --no-install-recommends -y software-properties-common git && \
     add-apt-repository ppa:marutter/rrutter4.0 && \
     add-apt-repository ppa:c2d4u.team/c2d4u4.0+ && \
     apt-get update && \
@@ -73,8 +73,6 @@ VOLUME /opt/app/output
 # v1.6.3
 ARG ACHILLES_VERSION=master
 RUN git clone --depth=1 -b ${ACHILLES_VERSION} https://github.com/OHDSI/Achilles.git /opt/app
-COPY . /opt/app/
-RUN ls -lisa
 
 # Install Achilles from source
 RUN R CMD INSTALL /opt/app \
