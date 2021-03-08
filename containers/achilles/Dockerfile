@@ -5,7 +5,7 @@ LABEL maintainer="Taha Abdul-Basser <ta2471@cumc.columbia.edu>"
 
 # Install java, R and required packages and clean up.
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y software-properties-common git && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y software-properties-common git && \
     add-apt-repository ppa:marutter/rrutter4.0 && \
     add-apt-repository ppa:c2d4u.team/c2d4u4.0+ && \
     apt-get update && \
@@ -38,7 +38,11 @@ ENV LANG en_US.UTF-8
 RUN R -e "install.packages( \
     c( \
     'XML', \
-    'RJSONIO' \
+    'RJSONIO', \
+    'later', \
+    'promises', \
+    'rlang', \
+    'shiny' \
     ), \
     repos='http://cran.rstudio.com/', \
     ) "

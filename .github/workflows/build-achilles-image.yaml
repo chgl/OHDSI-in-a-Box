@@ -1,12 +1,16 @@
-name: ci
+name: build Achilles container image
 
 on:
   push:
     branches: [master]
-  release:
-    types: [created]
+    paths:
+      - containers/achilles/*
+      - .github/workflows/build-achilles-image.yaml
   pull_request:
     branches: [master]
+    paths:
+      - containers/achilles/*
+      - .github/workflows/build-achilles-image.yaml
 
 jobs:
   build:
@@ -50,5 +54,5 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           context: ./containers/achilles
-      - name: Image digest
+      - name: Print image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
