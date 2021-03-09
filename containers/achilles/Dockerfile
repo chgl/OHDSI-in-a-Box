@@ -83,6 +83,8 @@ RUN R CMD INSTALL /opt/app \
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
     && find /opt/app -mindepth 1 -not \( -wholename /opt/app/docker-run -or -wholename /opt/app/output \) -delete
 
+COPY docker-run.R .
+
 # Create a non-root user with full access to the /opt/app directory
 RUN groupadd -g 10001 achilles && \
     useradd -u 10001 -g achilles achilles && \
