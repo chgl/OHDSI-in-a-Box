@@ -2,6 +2,7 @@ name: build Achilles container image
 
 env:
   ACHILLES_VERSION: master
+  IMAGE_VERSION: v1.0.0
 
 on:
   push:
@@ -54,7 +55,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.ACHILLES_VERSION }}
+          tags: ${{ env.IMAGE_VERSION }}-achilles${{ env.ACHILLES_VERSION }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           context: ./containers/achilles
           build-args: ACHILLES_VERSION=${{ env.ACHILLES_VERSION }}
