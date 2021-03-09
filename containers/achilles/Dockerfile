@@ -95,4 +95,4 @@ USER 10001
 VOLUME /opt/app/output
 
 # Define run script as default command
-CMD ["docker-run.R"]
+CMD ["/opt/app/docker-run.R"]
