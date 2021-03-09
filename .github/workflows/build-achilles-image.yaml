@@ -29,7 +29,8 @@ jobs:
         with:
           images: |
             ghcr.io/chgl/ohdsi/achilles
-          tag-sha: true
+          tag-custom: ${{ env.IMAGE_VERSION }}-achilles${{ env.ACHILLES_VERSION }}
+          tag-custom-only: true
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -55,7 +56,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_VERSION }}-achilles${{ env.ACHILLES_VERSION }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           context: ./containers/achilles
           build-args: ACHILLES_VERSION=${{ env.ACHILLES_VERSION }}
