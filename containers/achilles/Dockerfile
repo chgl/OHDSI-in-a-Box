@@ -95,4 +95,4 @@ USER 10001
 VOLUME /opt/app/output
 
 # Define run script as default command
-ENTRYPOINT [ "/bin/sh", "/opt/app/docker-run.R" ]
+CMD ["Rscript" , "/opt/app/docker-run.R"]
