@@ -1,7 +1,7 @@
 name: build Achilles container image
 
 env:
-  ACHILLES_VERSION: v1.6.3
+  ACHILLES_VERSION: master
 
 on:
   push:
