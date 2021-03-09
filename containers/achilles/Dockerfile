@@ -45,7 +45,8 @@ RUN R -e "install.packages( \
     'shiny' \
     ), \
     repos='http://cran.rstudio.com/', \
-    ) "
+    ) " && \
+    R -e "Sys.setenv('DATABASECONNECTOR_JAR_FOLDER' = '/tmp/jdbc-drivers'); downloadJdbcDrivers('postgresql')"
 
 # Install Achilles requirements that need to be installed from source
 RUN echo 'options(repos=structure(c(CRAN="https://cloud.r-project.org/")))' > /root/.Rprofile && \
