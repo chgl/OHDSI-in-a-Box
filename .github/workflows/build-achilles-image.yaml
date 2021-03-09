@@ -54,9 +54,9 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
-          tags: $ACHILLES_VERSION
+          tags: ${{ env.ACHILLES_VERSION }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           context: ./containers/achilles
-          build-args: ACHILLES_VERSION=$ACHILLES_VERSION
+          build-args: ACHILLES_VERSION=${{ env.ACHILLES_VERSION }}
       - name: Print image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
