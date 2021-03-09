@@ -33,12 +33,16 @@ db_conf <- parse_url(env_vars$ACHILLES_DB_URI)
 server <- paste(db_conf$hostname, db_conf$path, sep="/")
 
 # Create connection details using DatabaseConnector utility.
-db_username <- ifelse(env_vars$ACHILLES_DB_USERNAME == "" | is.na(env_vars$ACHILLES_DB_USERNAME),
-    db_conf$username,
-    env_vars$ACHILLES_DB_USERNAME)
-db_password <- ifelse(env_vars$ACHILLES_DB_PASSWORD == "" | is.na(env_vars$ACHILLES_DB_PASSWORD),
-    db_conf$password,
-    env_vars$ACHILLES_DB_PASSWORD)
+db_username <- db_conf$username
+if (env_vars$ACHILLES_DB_USERNAME != "") {
+    db_username <- env_vars$ACHILLES_DB_USERNAME
+}
+
+db_password <- db_conf$password
+if (env_vars$ACHILLES_DB_PASSWORD != "") {
+    db_password <- env_vars$ACHILLES_DB_PASSWORD
+}
+
 connectionDetails <- createConnectionDetails(
     dbms=db_conf$scheme, user=db_username, password=db_password,
     server=server, port=db_conf$port
