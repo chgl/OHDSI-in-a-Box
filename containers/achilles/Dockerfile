@@ -74,9 +74,9 @@ ENV PATH /opt/app:$PATH
 VOLUME /opt/app/output
 
 # Add project files to container
-# v1.6.3
 ARG ACHILLES_VERSION=master
-RUN git clone --depth=1 -b ${ACHILLES_VERSION} https://github.com/OHDSI/Achilles.git /opt/app
+RUN echo "Fetching Achilles version ${ACHILLES_VERSION}" && \
+    git clone --depth=1 -b ${ACHILLES_VERSION} https://github.com/OHDSI/Achilles.git /opt/app
 
 # Install Achilles from source
 RUN R CMD INSTALL /opt/app \

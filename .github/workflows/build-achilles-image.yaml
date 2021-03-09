@@ -1,5 +1,8 @@
 name: build Achilles container image
 
+env:
+  ACHILLES_VERSION: v1.6.3
+
 on:
   push:
     branches: [master]
@@ -30,13 +33,13 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      # - name: Login to GitHub Container Registry
-      #   uses: docker/login-action@v1
-      #   if: github.event_name != 'pull_request'
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.repository_owner }}
-      #     password: ${{ secrets.GHCR_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -54,5 +57,6 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           context: ./containers/achilles
+          build-args: ACHILLES_VERSION=$ACHILLES_VERSION
       - name: Print image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
