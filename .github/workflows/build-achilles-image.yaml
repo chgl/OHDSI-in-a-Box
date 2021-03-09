@@ -1,0 +1,63 @@
+name: build Achilles container image
+
+env:
+  ACHILLES_VERSION: master
+  IMAGE_VERSION: v1.0.0
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - containers/achilles/*
+      - .github/workflows/build-achilles-image.yaml
+  pull_request:
+    branches: [master]
+    paths:
+      - containers/achilles/*
+      - .github/workflows/build-achilles-image.yaml
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: |
+            ghcr.io/chgl/ohdsi/achilles
+          tag-sha: true
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.IMAGE_VERSION }}-achilles${{ env.ACHILLES_VERSION }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          context: ./containers/achilles
+          build-args: ACHILLES_VERSION=${{ env.ACHILLES_VERSION }}
+      - name: Print image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
